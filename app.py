@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# from keras.saving import load_model
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 
@@ -75,7 +74,7 @@ class App:
                 }
                 </style>
                 """
-        # st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+        st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
         st.write(font_css, unsafe_allow_html=True)
 
         countries = np.concatenate(([""], self.all_stocks_data["Country"].unique()))
