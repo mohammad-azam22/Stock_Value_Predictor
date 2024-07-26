@@ -18,7 +18,7 @@ import threading
 class App:
 
     def __init__(self):
-        self.all_stocks_data = pd.read_csv("A:\myvenv\myfiles\stock_tickers.csv")
+        self.all_stocks_data = pd.read_csv("stock_tickers.csv")
         self.region = None
         self.selected_region_data = None
         self.selected_stock_name = None
@@ -176,7 +176,7 @@ class App:
         x = np.array(x)
         y = np.array(y)
 
-        model = load_model("A:\myvenv\myfiles\Stock_Prediction_Model.keras")
+        model = load_model("Stock_Prediction_Model.keras")
         predict = model.predict(x)
 
         predict = predict * scale
