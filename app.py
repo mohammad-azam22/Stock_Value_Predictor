@@ -7,7 +7,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from keras.saving import load_model
+# from keras.saving import load_model
+from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 
 import streamlit as st
