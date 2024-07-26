@@ -177,7 +177,7 @@ class App:
         x = np.array(x)
         y = np.array(y)
 
-        model = load_model("Stock_Prediction_Model.keras")
+        model = load_model("Stock_Prediction_Model.h5")
         predict = model.predict(x)
 
         predict = predict * scale
