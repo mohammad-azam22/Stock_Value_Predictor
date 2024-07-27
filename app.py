@@ -20,7 +20,7 @@ import streamlit.components.v1 as components
 class App:
 
     def __init__(self):
-        self.all_stocks_data = pd.read_csv("A:\myvenv\myfiles\stock_tickers.csv")
+        self.all_stocks_data = pd.read_csv("stock_tickers.csv")
         self.region = None
         self.selected_region_data = None
         self.selected_stock_name = None
