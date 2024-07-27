@@ -116,7 +116,7 @@ class App:
         self.tab1.subheader(self.selected_stock_data.iloc[0,1] + ": Stock Data")
         self.tab1.dataframe(self.data, width=1000)
 
-        time.sleep(4)
+        time.sleep(5)
         self.getMovingAvg()
         
     def getInformation(self):
