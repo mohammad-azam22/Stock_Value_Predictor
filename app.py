@@ -106,7 +106,7 @@ class App:
     
     def downloadData(self, start):
         
-        self.getMetadata()
+        self.getInformation()
 
         start = (datetime.now() - timedelta(365*start)).strftime('%Y-%m-%d')
         end = (datetime.now()).strftime('%Y-%m-%d')
@@ -119,7 +119,7 @@ class App:
         time.sleep(4)
         self.getMovingAvg()
         
-    def getMetadata(self):
+    def getInformation(self):
         data = {"Values":{
                     "Stock Symbol": self.selected_stock_data["Symbol"].iloc[0],
                     "Stock Name": self.selected_stock_data["Name"].iloc[0],
@@ -186,8 +186,8 @@ class App:
         with _lock:
             self.tab3.subheader("Actual Stock Price vs Predicted Stock Price")
             fig4 = plt.figure(figsize=(8,6))
-            plt.plot(predict, "r", label="Predicted Stock Price")
-            plt.plot(y, "g", label="Actual Stock Price")
+            plt.plot(predict, "r", label="Predicted Stock Price", alpha=0.8)
+            plt.plot(y, "g", label="Actual Stock Price", alpha=0.8)
             plt.xlabel("Weeks")
             plt.ylabel("Stock Price in USD")
             plt.legend()
