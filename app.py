@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import time
+import threading
 
 import yfinance as yf
 
@@ -7,18 +8,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from tensorflow.keras.models import load_model
+import tensorflow as tf
+import keras
+from keras.layers import Dense, Dropout, LSTM
+from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 
 import streamlit as st
 import streamlit.components.v1 as components
 
-import threading
-
 class App:
 
     def __init__(self):
-        self.all_stocks_data = pd.read_csv("stock_tickers.csv")
+        self.all_stocks_data = pd.read_csv("A:\myvenv\myfiles\stock_tickers.csv")
         self.region = None
         self.selected_region_data = None
         self.selected_stock_name = None
@@ -36,6 +38,7 @@ class App:
     def main(self):
 
         components.html("<h1 style='text-align: center; font-family: Arial; color:#000;'>Stock Value Prediction</h1>", height = 100)
+        
         font_css = """
         <style>
         button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p {
@@ -74,8 +77,8 @@ class App:
                 }
                 </style>
                 """
+        st.markdown(font_css, unsafe_allow_html=True)
         st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
-        st.write(font_css, unsafe_allow_html=True)
 
         countries = np.concatenate(([""], self.all_stocks_data["Country"].unique()))
 
@@ -105,8 +108,8 @@ class App:
 
     
     def downloadData(self, start):
-        
-        self.getInformation()
+
+        self.getMetadata()
 
         start = (datetime.now() - timedelta(365*start)).strftime('%Y-%m-%d')
         end = (datetime.now()).strftime('%Y-%m-%d')
@@ -116,10 +119,11 @@ class App:
         self.tab1.subheader(self.selected_stock_data.iloc[0,1] + ": Stock Data")
         self.tab1.dataframe(self.data, width=1000)
 
-        time.sleep(5)
+        time.sleep(4)
         self.getMovingAvg()
         
-    def getInformation(self):
+    def getMetadata(self):
+        st.session_state["run"] = True
         data = {"Values":{
                     "Stock Symbol": self.selected_stock_data["Symbol"].iloc[0],
                     "Stock Name": self.selected_stock_data["Name"].iloc[0],
@@ -133,6 +137,7 @@ class App:
 
     def getMovingAvg(self):
         if not self.data.empty:
+
             _lock = threading.Lock()
             with _lock:
                 mov_avg_50 = self.data["Close"].rolling(50).mean()
@@ -144,58 +149,86 @@ class App:
                 plt.plot(mov_avg_100, "g", label="100 day moving avg", alpha=0.8)
                 plt.plot(mov_avg_200, "b", label="200 day moving avg", alpha=0.8)
                 plt.plot(self.data["Close"], "Black", label="Stock Closing Price", alpha=0.8)
-                plt.title("Actual Price vs 50 day Moving Avg. 100 day Moving Avg. vs 200 day Moving Avg.")
+                plt.title("Actual Price vs Moving Average")
                 plt.xlabel("Calendar Years")
                 plt.ylabel("Stock Price in USD")
                 plt.legend()
                 plt.grid()
                 self.tab2.pyplot(fig)
-            
+
             time.sleep(4)
             self.getPrediction()
+        
 
     def getPrediction(self):
-        
-        self.data.dropna(inplace=True)
-        train_data = pd.DataFrame(self.data["Close"][0 : int(len(self.data)*0.80)])    # getting initial 80% data as the training data
-        test_data = pd.DataFrame(self.data["Close"][int(len(self.data)*0.80) : ])    # getting remaining 20% data as the testing data
 
-        scaler = MinMaxScaler(feature_range=(0,1))
+        tf.random.set_seed(0)
+        y = self.data['Close'].fillna('ffill')
+        y = y.values.reshape(-1, 1)
 
-        past_100_days = train_data.tail(100)
-        test_data = pd.concat([past_100_days, test_data], ignore_index=True)
+        scaler = MinMaxScaler(feature_range=(0, 1))
+        scaler = scaler.fit(y)
+        y = scaler.transform(y)
 
-        test_data_scaled = scaler.fit_transform(test_data)
-        scale = 1/scaler.scale_
+        # n_lookback = 90  # length of input sequences (lookback period)
+        n_lookback = len(self.data)//10  # length of input sequences (lookback period)
+        # n_forecast = 30  # length of output sequences (forecast period)
+        n_forecast = len(self.data)//100  # length of output sequences (forecast period)
 
-        x = []
-        y = []
-        for i in range(100, test_data_scaled.shape[0]):
-            x.append(test_data_scaled[i-100:i])
-            y.append(test_data_scaled[i,0])
+        X = []
+        Y = []
 
-        x = np.array(x)
-        y = np.array(y)
+        for i in range(n_lookback, len(y) - n_forecast + 1):
+            X.append(y[i - n_lookback: i])
+            Y.append(y[i: i + n_forecast])
 
-        model = load_model("Stock_Prediction_Model.h5")
-        predict = model.predict(x)
+        X = np.array(X)
+        Y = np.array(Y)
 
-        predict = predict * scale
-        y = y * scale
+        model = Sequential()
+        model.add(LSTM(units=50, return_sequences=True, input_shape=(n_lookback, 1)))
+        model.add(Dropout(0.5))
+        model.add(LSTM(units=50))
+        model.add(Dense(n_forecast))
+
+        model.compile(loss='mean_squared_error', optimizer='adam')
+
+        with self.tab3.container():
+            with st.spinner('Model Training in Progress...'):
+                history = model.fit(X, Y, epochs=10, batch_size=32, verbose=2)
+
+        X_ = y[-n_lookback:]  # last available input sequence
+        X_ = X_.reshape(1, n_lookback, 1)
+
+        Y_ = model.predict(X_).reshape(-1, 1)
+        Y_ = scaler.inverse_transform(Y_)
+
+        df_past = self.data[['Close']].reset_index()
+        df_past.rename(columns={'index': 'Date', 'Close': 'Actual'}, inplace=True)
+        df_past['Date'] = pd.to_datetime(df_past['Date'])
+        df_past['Forecast'] = np.nan
+        df_past.iloc[2,-1] = df_past['Actual'].iloc[-1]
+
+        df_future = pd.DataFrame(columns=['Date', 'Actual', 'Forecast'])
+        df_future['Date'] = pd.date_range(start=df_past['Date'].iloc[-1] + pd.Timedelta(days=1), periods=n_forecast)
+        df_future['Forecast'] = Y_.flatten()
+        df_future['Actual'] = np.nan
+
+        results = pd.concat([df_past, df_future]).set_index("Date")
 
         _lock = threading.Lock()
         with _lock:
-            self.tab3.subheader("Actual Stock Price vs Predicted Stock Price")
-            fig4 = plt.figure(figsize=(8,6))
-            plt.plot(predict, "r", label="Predicted Stock Price", alpha=0.8)
-            plt.plot(y, "g", label="Actual Stock Price", alpha=0.8)
-            plt.xlabel("Weeks")
-            plt.ylabel("Stock Price in USD")
-            plt.legend()
+            fig = plt.figure(figsize=(16, 12), dpi=300)
+            # plt.xlim(datetime.now() - timedelta(len(self.data)//100),datetime.now() + timedelta(len(self.data)//100))
+            plt.xlim(datetime.now() - timedelta(30),datetime.now() + timedelta(len(self.data)//100))
             plt.grid()
-            self.tab3.pyplot(fig4)
+            plt.xticks(rotation=70)
+            plt.plot(results)
+            plt.legend(results.columns)
+            
+            self.tab3.pyplot(fig) 
 
-    
 if __name__ == "__main__":
     app = App()
     app.main()
+    
