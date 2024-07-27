@@ -78,7 +78,7 @@ class App:
                 </style>
                 """
         st.markdown(font_css, unsafe_allow_html=True)
-        st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+        # st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
         countries = np.concatenate(([""], self.all_stocks_data["Country"].unique()))
 
