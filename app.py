@@ -132,6 +132,7 @@ class App:
         self.tab0.table(data)
 
     def getMovingAvg(self):
+        if not self.data.empty:
             _lock = threading.Lock()
             with _lock:
                 mov_avg_50 = self.data["Close"].rolling(50).mean()
