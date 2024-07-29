@@ -86,11 +86,8 @@ class App:
 
         self.selected_region_data = self.all_stocks_data[self.all_stocks_data["Country"] == self.region]
         
-        self.selected_stock_name = st.selectbox('Select Stock', ["Enter Symbol"].append(self.selected_region_data["Symbol"] + " - " + self.selected_region_data["Name"].str.slice(stop=50)))     
+        self.selected_stock_name = st.selectbox('Select Stock', self.selected_region_data["Symbol"] + " - " + self.selected_region_data["Name"].str.slice(stop=50))
 
-        if self.selected_stock_name == "Enter Symbol": 
-            self.selected_stock_name = st.text_input("Enter Stock Symbol...")
-        
         if self.selected_stock_name != None:
             self.selected_stock_data = self.selected_region_data[self.selected_region_data["Symbol"] == self.selected_stock_name.split(" ")[0]]
 
