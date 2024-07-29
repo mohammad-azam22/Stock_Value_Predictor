@@ -36,8 +36,8 @@ class App:
         )
 
     def main(self):
-
-        components.html("<h1 style='text-align: center; font-family: Arial; color:#000;'>Stock Value Prediction</h1>", height = 100)
+        
+        components.html("<h1 style='text-align: center; font-family: Arial; color:#000; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: #fff'>Stock Value Prediction</h1>", height = 100)
         
         font_css = """
         <style>
@@ -150,8 +150,9 @@ class App:
                 plt.plot(mov_avg_200, "b", label="200 day moving avg", alpha=0.8)
                 plt.plot(self.data["Close"], "Black", label="Stock Closing Price", alpha=0.8)
                 plt.title("Actual Price vs Moving Average")
+                plt.xticks(rotation=45)
                 plt.xlabel("Calendar Years")
-                plt.ylabel("Stock Price in USD")
+                plt.ylabel("Stock Price in $")
                 plt.legend()
                 plt.grid()
                 self.tab2.pyplot(fig)
@@ -219,11 +220,13 @@ class App:
         _lock = threading.Lock()
         with _lock:
             fig = plt.figure(figsize=(16, 12), dpi=300)
+            plt.plot(results)
             # plt.xlim(datetime.now() - timedelta(len(self.data)//100),datetime.now() + timedelta(len(self.data)//100))
             plt.xlim(datetime.now() - timedelta(30),datetime.now() + timedelta(len(self.data)//100))
             plt.grid()
-            plt.xticks(rotation=70)
-            plt.plot(results)
+            plt.xticks(rotation=45)
+            plt.xlabel("Calendar Days")
+            plt.ylabel("Stock Price in $")
             plt.legend(results.columns)
             
             self.tab3.pyplot(fig) 
