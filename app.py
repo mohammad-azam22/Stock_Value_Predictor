@@ -92,15 +92,15 @@ class App:
             self.selected_stock_data = self.selected_region_data[self.selected_region_data["Symbol"] == self.selected_stock_name.split(" ")[0]]
 
         if self.selected_stock_name == None:
-            start_data = st.slider("Choose the range of past year data (in years)", 1, 10, 1, disabled=True)
+            start_data = st.slider("Choose the range of past year data (in years)", 1, 15, 1, disabled=True)
         else:
-            start_data = st.slider("Choose the range of past year data (in years)", 1, 10, 1, key="start")
+            start_data = st.slider("Choose the range of past year data (in years)", 1, 15, 1)
         
         _, col, _ = st.columns([1, 1, 1])
         if self.selected_stock_name == None:
-            col.button("Get Data", type="primary", use_container_width=True, key="btn1", disabled=True)  
+            col.button("Get Data", type="primary", use_container_width=True, disabled=True)  
         else:
-            col.button("Get Data", on_click=self.downloadData, args = (start_data,), use_container_width=True, type="primary", key="btn1")
+            col.button("Get Data", on_click=self.downloadData, args = (start_data,), use_container_width=True, type="primary")
 
         st.divider()
 
