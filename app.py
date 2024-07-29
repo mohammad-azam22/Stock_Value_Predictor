@@ -37,7 +37,8 @@ class App:
 
     def main(self):
         
-        components.html("<h1 class='st-emotion-cache-11bf0hs', style='text-align: center; font-family: Arial; color:#000; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: #fff';>Stock Value Prediction</h1>", height = 100)
+        components.html("<h1 class='st-emotion-cache-11bf0hs', style='text-align: center; font-family: Arial;>Stock Value Prediction</h1>", height = 100)
+        # components.html("<h1 class='st-emotion-cache-11bf0hs', style='text-align: center; font-family: Arial; color:#000; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: #fff';>Stock Value Prediction</h1>", height = 100)
         
         font_css = """
         <style>
