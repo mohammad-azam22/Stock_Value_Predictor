@@ -16,7 +16,7 @@ This web application allows users to select a ticker symbol and a range of histo
     ```
 2. Navigate to the project directory:
     ```bash
-    cd stock-price-predictor
+    cd Stock_Value_Predictor
     ```
 3. Install the required dependencies:
     ```bash
