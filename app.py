@@ -104,7 +104,7 @@ class App:
 
         st.divider()
 
-        self.tab0, self.tab1, self.tab2, self.tab3 = st.tabs(["Information".center(15,"\u2001"), "Data".center(10,"\u2001"), "Moving Avg".center(15,"\u2001"), "Prediction".center(15,"\u2001")])
+        self.tab0, self.tab1, self.tab2, self.tab3 = st.tabs(["Information".center(15,"\u2001"), "Data".center(10,"\u2001"), "Moving Avg".center(14,"\u2001"), "Prediction".center(16,"\u2001")])
 
     
     def downloadData(self, start):
