@@ -220,9 +220,9 @@ class App:
         _lock = threading.Lock()
         with _lock:
             fig = plt.figure(figsize=(16, 12), dpi=300)
-            plt.plot(results)
+            plt.plot(results[-(30+len(self.data)//100)])
             # plt.xlim(datetime.now() - timedelta(len(self.data)//100),datetime.now() + timedelta(len(self.data)//100))
-            plt.xlim(datetime.now() - timedelta(30),datetime.now() + timedelta(len(self.data)//100))
+            # plt.xlim(datetime.now() - timedelta(30),datetime.now() + timedelta(len(self.data)//100))
             plt.grid()
             plt.xticks(rotation=45)
             plt.xlabel("Calendar Days")
