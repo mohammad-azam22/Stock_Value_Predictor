@@ -40,6 +40,7 @@ class App:
     def main(self):
 
         main_bg_ext = "jpg"
+        main_bg = "main_bg.jpg"
         
         st.markdown(
              f"""
