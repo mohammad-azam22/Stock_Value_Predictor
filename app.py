@@ -86,7 +86,7 @@ class App:
 
         self.selected_region_data = self.all_stocks_data[self.all_stocks_data["Country"] == self.region]
         
-        self.selected_stock_name = st.selectbox('Select Stock', pd.concat(pd.DataFrame("Enter Stock Symbol"),self.selected_region_data["Symbol"] + " - " + self.selected_region_data["Name"].str.slice(stop=50)))
+        self.selected_stock_name = st.selectbox('Select Stock', pd.concat([pd.DataFrame(["Enter Stock Symbol"]),self.selected_region_data["Symbol"] + " - " + self.selected_region_data["Name"].str.slice(stop=50)], ignore_index=True))
 
         if self.selected_stock_name == "Enter Stock Symbol":
             self.selected_stock_name = st.text_input("Enter Stock Symbol")
