@@ -1,7 +1,7 @@
 # Stock Price Predictor Web Application
 
 ## Overview
-This web application allows users to select a ticker symbol and a range of historical data to train a machine learning model that predicts future stock prices. Additionally, the application also plots the moving average to help visualize the stock trend.
+This web application allows users to select a stock ticker symbol and a range of historical data to train a machine learning model that predicts future stock prices. Additionally, the application also plots the moving average to help visualize the stock trend.
 
 ## Features
 - **Ticker Symbol Selection**: Users can choose any stock ticker symbol.
