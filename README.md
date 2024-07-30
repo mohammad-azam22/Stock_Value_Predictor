@@ -34,10 +34,11 @@ This web application allows users to select a ticker symbol and a range of histo
 5. The moving average plot will be displayed to visualize the stock trend.
 
 ## Technologies Used
+- **Streamlit**: For Front End Development.
 - **Python**: For backend development.
 - **Numpy**: For scientific computing.
 - **Pandas**: For data manipulation and analysis.
-- **Matplotlib**: For plotting the moving average.
+- **Matplotlib**: For plotting the moving average and prediction graphs.
 - **Scikit-learn**: For machine learning model training.
 - **TensorFlow**: For model training and prediction.
 
