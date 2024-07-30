@@ -88,7 +88,7 @@ class App:
         
         self.selected_stock_name = st.selectbox('Select Stock', pd.concat(pd.DataFrame("Enter Stock Symbol"),self.selected_region_data["Symbol"] + " - " + self.selected_region_data["Name"].str.slice(stop=50)))
 
-        if self.selected_stock_name == Enter Stock Symbol:
+        if self.selected_stock_name == "Enter Stock Symbol":
             self.selected_stock_name = st.text_input("Enter Stock Symbol")
         
         if self.selected_stock_name != None:
