@@ -17,6 +17,8 @@ from sklearn.preprocessing import MinMaxScaler
 import streamlit as st
 import streamlit.components.v1 as components
 
+import base64
+
 class App:
 
     def __init__(self):
@@ -36,6 +38,20 @@ class App:
         )
 
     def main(self):
+
+        main_bg_ext = "jpg"
+        
+        st.markdown(
+             f"""
+             <style>
+             .stApp {{
+                 background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()});
+                 background-size: cover
+             }}
+             </style>
+             """,
+             unsafe_allow_html=True
+         )
         
         components.html("<h1 style='text-align: center; font-family: Arial; color:#000; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: #fff';>Stock Value Prediction</h1>", height = 100)
         
