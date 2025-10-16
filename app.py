@@ -1,3 +1,4 @@
+# https://stockvaluepredictor.streamlit.app/
 from datetime import datetime, timedelta
 import time
 import threading
@@ -237,3 +238,4 @@ if __name__ == "__main__":
     app = App()
     app.main()
     
+
